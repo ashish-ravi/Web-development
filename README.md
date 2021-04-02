@@ -3,3 +3,7 @@ It's a chatting app built with React and firebase. Hosted and deployed using fir
 
 
 ![image](https://user-images.githubusercontent.com/55567705/113388253-7fef1e00-93ab-11eb-83a9-497844b3750d.png)
+
+
+![Alt Text](https://media.giphy.com/media/xkOuauoOI7LsYVZcnO/giphy.gif)
+
