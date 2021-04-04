@@ -4,14 +4,17 @@ import fire from "../../fire";
 import FaceTwoToneIcon from '@material-ui/icons/FaceTwoTone';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SendIcon from '@material-ui/icons/Send';
-
+import AttachFileIcon from '@material-ui/icons/AttachFile';
+import NavBar from "../../component/navbar";
+import Background from "../../hello.png";
 
 const Chat = () => {
     
     const [message,setMessage] = useState("");
     const [revMessages,setRevMessages]= useState([]);
-
+    const[name , setName] = useState("");
     
+
     const handleChange = (e) => {
         // console.log(e.target.value);
         let val = e.target.value;
@@ -29,34 +32,43 @@ const Chat = () => {
         }
       }, [])
 
-    useEffect( () => {
-        readMessageFromDatabase();
-    } , [] )
+    // useEffect( () => {
+    //     readMessageFromDatabase();
+    // } , [] )
 
 
     useEffect(() => {
+        readMessageFromDatabase();
         const list = (event) => {
           if (event.code === "Enter" || event.code === "NumpadEnter") {
             console.log("Enter key was pressed. Run your function.");
             handleClick();
+            readMessageFromDatabase();
+
           }
         };
         document.addEventListener("keydown", list);
         return () => {
           document.removeEventListener("keydown", list);
         };
+        
       }, []);
 
 
 
     const handleClick = () => {
-        setMessage("");
         fire.database().ref("/chat").push({
             message: message,
-            user: "Ashish"
+            user: name,
+        
         });
         //if we use set instead of push, /chat can contain only one value, we use push becuase /chat can store multiple values
         // alert(message);
+        
+        setMessage("");
+
+          
+        
         
         
 
@@ -77,12 +89,29 @@ const Chat = () => {
             // console.log(snapshot.val());
         } );
     };
+
     //Refer docs from firebase realtime database docs
     //This function has to be used only once. to call it multiple times use: useEffect
 
+   
+  
+     const myFunction = () => {
+        const person = prompt("Please enter your name: ","Ashish");
+        if(person != null){
+            setName(person)
+        }
+        else{
+            setName("Ashish")
+        }    
+    }
+    
+
     console.log("messages",revMessages);
     return(
-        <>
+        <div style={{backgroundImage: `url(${Background})` , backgroundRepeat:"no-repeat", backgroundSize:"cover", backgroundPosition:"right top" }}>
+        <NavBar />
+        <br />
+         <center><button onClick={myFunction}>Click here to Set name!</button></center>
             <div style={styles.content}>
                 <Grid container justify="center" style={styles.chatContainer}>
                     <Grid item xs={5} style={{ border: "2px solid rgba(0,0,0,0.2)", backgroundColor:"#CCCC00", color:"black"}} >
@@ -97,7 +126,7 @@ const Chat = () => {
                             </Grid>
 
                         </Grid>
-                        <Grid container style={{height:"40vh", overflow:"auto", backgroundColor:"white", color:"black" }} ref={messageEl}>
+                        <Grid container style={{height:"50vh", overflow:"auto", backgroundColor:"white", color:"black" }} ref={messageEl}>
                             <Grid item xs={12} ref={messageEl}>
                                 {/* <p>Hi</p>
                                 <p>Hello</p>
@@ -122,25 +151,27 @@ const Chat = () => {
                                 <TextField fullWidth style={{ width:"100%"}}  id="standard-basic" label="Enter Message" variant="outlined" onChange={handleChange} value= {message} borderRadius="50%" margin="none" style={{backgroundColor:""}} />
                             </Grid>
                             <Grid item xs={1}>
-                                <IconButton variant="outlined" color="primary" size="large" onClick={handleClick}  >  <SendIcon /></IconButton>
+                               <IconButton variant="outlined" color="primary" size="large" onClick={handleClick}  >  <SendIcon /></IconButton>
                             </Grid>
                         </Grid>
 
                     </Grid>
                     
                 </Grid>
+                
+              
             </div>
-        </>
+        </div>
     );
 };
 
 const styles = {
     content: {
-        minHeight: "100vh",
+        minHeight: "140vh",
         marginTop: 80,
     },
     chatContainer: {
-        height: "60vh"
+        height: "60vh",
     }
 };
 
